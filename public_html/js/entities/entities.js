@@ -41,31 +41,30 @@ game.PlayerEntity = me.Entity.extend({
         }
 
 
+
         this._super(me.Entity, "update", [delta]);
         return true;
     },
-    
-    collideHandler: function(response){
-        
+    collideHandler: function(response) {
+
     }
 
 });
 
 game.LevelTrigger = me.Entity.extend({
-    init: function(x, y, settings){
-       this._super(me.Entity, 'init', [x, y, settings]);
-       this.body.onCollision = this.onCollision.bind(this);
-       this.level = settings.level;
-       this.xSpawn = settings.xSpawn;
-       this.ySpawn = settings.ySpawn;
+    init: function(x, y, settings) {
+        this._super(me.Entity, 'init', [x, y, settings]);
+        this.body.onCollision = this.onCollision.bind(this);
+        this.level = settings.level;
+        this.xSpawn = settings.xSpawn;
+        this.ySpawn = settings.ySpawn;
     },
-    
-    onCollision: function(){
+    onCollision: function() {
         this.body.setCollisionMark(me.collision.types.NO_OBJECT);
         me.levelDirector.loadLevel(this.level);
         me.state.current().resetPlayer(this.xSpawn, this.ySpawn);
     }
-    
+
 });
 
 game.BadGuy = me.Entity.extend({
@@ -80,7 +79,7 @@ game.BadGuy = me.Entity.extend({
                     return (new me.Rect(0, 0, 60, 28)).toPolygon();
                 }
             }]);
-        
+
         this.spritewidth = 60;
         var width = settings.width;
         x = this.pos.x;
@@ -88,47 +87,45 @@ game.BadGuy = me.Entity.extend({
         this.endX = x + width - this.spritewidth;
         this.pos.x = x + width - this.spritewidth;
         this.updateBounds();
-        
+
         this.alwaysUpdate = true;
-        
+
         this.walkLeft = false;
         this.alive = true;
         this.type = "badguy";
-        
+
         //this.renderable.addAnimation("run", [0, 1, 2], 80);
         //this.renderable.setCurrentAnimation("run");
-        
+
         this.body.setVelocity(4, 6);
     },
-    
-    update: function(delta){
+    update: function(delta) {
         this.body.update(delta);
         me.collision.check(this, true, this.collideHandler.bind(this), true);
-        
-        if(this.alive){
-            if(this.walkLeft && this.pos.x <= startX){
+
+        if (this.alive) {
+            if (this.walkLeft && this.pos.x <= startX) {
                 this.walkLeft = false;
-            }else if(!this.walkLeft && this.pos.x >= endX){
+            } else if (!this.walkLeft && this.pos.x >= endX) {
                 this.walkLeft = true;
             }
             this.flipX(!this.walkLeft);
             this.body.vel.x += (this.walkLeft) ? -this.body.accel.x * me.timer.tick : this.body.accel.x * me.timer.tick;
-            
-        }else{
+
+        } else {
             me.game.world.removeChild(this);
         }
-        
+
         this._super(me.Entity, "update", [delta]);
         return true;
     },
-    
-    collideHandler: function(response){
+    collideHandler: function(response) {
         var ydif = this.pos.y - response.b.pos.y;
-        
-        if(response.b.type === 'badguy'){
-            if(ydif <= -115){
+
+        if (response.b.type === 'badguy') {
+            if (ydif <= -115) {
                 response.b.alive = false;
-            }else{
+            } else {
                 me.state.change(me.state.MENU);
             }
         }
@@ -147,9 +144,9 @@ game.Mushroom = me.Entity.extend({
                     return (new me.Rect(0, 0, 64, 64)).toPolygon();
                 }
             }]);
-    
+
         me.collision.check(this);
         this.type = "mushroom";
     }
-    
+
 });
