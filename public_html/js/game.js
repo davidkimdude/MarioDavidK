@@ -43,7 +43,7 @@ var game = {
                 me.pool.register("BadGuy", game.BadGuy);
                 me.pool.register("mushroom", game.Mushroom);
                 
-                me.pool.register("levelTrigger", game.LevelTrigger);
+                me.pool.register("levelTrigger", game.levelTrigger);
             
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
