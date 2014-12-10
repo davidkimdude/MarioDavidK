@@ -1,4 +1,4 @@
-// 
+// Make the character
 game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {
         this._super(me.Entity, 'init', [x, y, {
@@ -12,6 +12,8 @@ game.PlayerEntity = me.Entity.extend({
                 }
             }]);
 
+        //Add animations from the sprite sheet
+        //You can use these in the other codes to make a animation
         this.renderable.addAnimation("idle", [3]);
         this.renderable.addAnimation("bigIdle", [19]);
         this.renderable.addAnimation("smallWalk", [8, 9, 10, 11, 12, 13], 80);
@@ -23,8 +25,10 @@ game.PlayerEntity = me.Entity.extend({
 
         this.big = false;
         this.body.setVelocity(5, 20);
+        //Make the camera to follow along the mario
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
     },
+    //Make the mario able to go right, left and jump
     update: function(delta) {
         if (me.input.isKeyPressed("right")) {
             this.body.vel.x += this.body.accel.x * me.timer.tick;
@@ -36,6 +40,7 @@ game.PlayerEntity = me.Entity.extend({
             this.body.vel.x = 0;
         }
 
+        //If you press up button you can jump
         if (me.input.isKeyPressed("up")) {
             this.body.vel.y -= this.body.accel.y * me.timer.tick;
         }
@@ -43,6 +48,7 @@ game.PlayerEntity = me.Entity.extend({
         this.body.update(delta);
         me.collision.check(this, true, this.collideHandler.bind(this), true);
 
+        //Decide what will mario do when he gets big and small
         if (!this.big) {
             if (this.body.vel.x !== 0) {
                 if (!this.renderable.isCurrentAnimation("smallWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
@@ -67,6 +73,7 @@ game.PlayerEntity = me.Entity.extend({
         this._super(me.Entity, "update", [delta]);
         return true;
     },
+    //Check the collisions between the mario and the bad guys
     collideHandler: function(response) {
         var ydif = this.pos.y - response.b.pos.y;
         console.log(ydif);
@@ -85,6 +92,7 @@ game.PlayerEntity = me.Entity.extend({
                 me.state.change(me.state.MENU);
             }
             }
+        //Decide what happens if mario eats the mushroom                
         }else if(response.b.type === 'mushroom'){
             this.renderable.setCurrentAnimation("grow", "bigIdle");
             this.big = true;
@@ -94,6 +102,7 @@ game.PlayerEntity = me.Entity.extend({
 
 });
 
+//Let the mario go through the door to another level
 game.levelTrigger = me.Entity.extend({
     init: function(x, y, settings) {
         this._super(me.Entity, 'init', [x, y, settings]);
@@ -102,6 +111,7 @@ game.levelTrigger = me.Entity.extend({
         this.xSpawn = settings.xSpawn;
         this.ySpawn = settings.ySpawn;
     },
+    //Reset player after moving to the another level
     onCollision: function() {
         this.body.setCollisionMask(me.collision.types.NO_OBJECT);
         me.levelDirector.loadLevel(this.level);
