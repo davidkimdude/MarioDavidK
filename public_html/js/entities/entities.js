@@ -119,11 +119,11 @@ game.levelTrigger = me.Entity.extend({
     }
 
 });
-
+//Makes the bad guy
 game.BadGuy = me.Entity.extend({
     init: function(x, y, settings) {
         this._super(me.Entity, 'init', [x, y, {
-                image: "mario",
+                image: "slime",
                 spritewidth: "60",
                 spriteheight: "28",
                 width: 60,
@@ -176,6 +176,7 @@ game.BadGuy = me.Entity.extend({
     }
 });
 
+//Add mushroom to the game
 game.Mushroom = me.Entity.extend({
     init: function(x, y, settings) {
         this._super(me.Entity, 'init', [x, y, {
