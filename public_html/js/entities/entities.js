@@ -33,7 +33,7 @@ game.PlayerEntity = me.Entity.extend({
         if (me.input.isKeyPressed("right")) {
             this.body.vel.x += this.body.accel.x * me.timer.tick;
 
-        }else if (me.input.isKeyPressed("left")) {
+        } else if (me.input.isKeyPressed("left")) {
             this.body.vel.x -= this.body.accel.x / me.timer.tick;
 
         } else {
@@ -44,7 +44,7 @@ game.PlayerEntity = me.Entity.extend({
         if (me.input.isKeyPressed("up")) {
             this.body.vel.y -= this.body.accel.y * me.timer.tick;
         }
-        
+
         this.body.update(delta);
         me.collision.check(this, true, this.collideHandler.bind(this), true);
 
@@ -58,7 +58,7 @@ game.PlayerEntity = me.Entity.extend({
             } else {
                 this.renderable.setCurrentAnimation("idle");
             }
-        }else{
+        } else {
             if (this.body.vel.x !== 0) {
                 if (!this.renderable.isCurrentAnimation("bigWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
                     this.renderable.setCurrentAnimation("bigWalk");
@@ -82,18 +82,18 @@ game.PlayerEntity = me.Entity.extend({
             if (ydif <= -115) {
                 response.b.alive = false;
             } else {
-                if(this.big){
+                if (this.big) {
                     this.big = false;
                     this.body.vel.y -= this.body.accel.y * me.timer.tick;
                     this.jumping = true;
                     this.renderable.setCurrentAnimation("shrink", "idle");
                     this.renderable.setAnimationFrame();
-                }else{
-                me.state.change(me.state.MENU);
+                } else {
+                    me.state.change(me.state.MENU);
+                }
             }
-            }
-        //Decide what happens if mario eats the mushroom                
-        }else if(response.b.type === 'mushroom'){
+            //Decide what happens if mario eats the mushroom                
+        } else if (response.b.type === 'mushroom') {
             this.renderable.setCurrentAnimation("grow", "bigIdle");
             this.big = true;
             me.game.world.removeChild(response.b);
